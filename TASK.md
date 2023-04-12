@@ -20,18 +20,21 @@ standard_init_linux.go:228: exec user process caused: exec format error
 docker build --platform linux/amd64 -t tag
 
 Более подробно можно прочитать в статье: https://programmerah.com/how-to-solve-docker-run-error-standard_init_linux-go219-exec-user-process-caused-exec-format-error-39221/
+***
+####Used commands:
+Пререквизиты -> создание executable файла:
 
-## Micronaut 3.8.8 Documentation
+    ./gradlew clean build (в корне проекта)
+Создание image 
+    
+    docker build --platform linux/amd64 -t ll-o-micro .
 
-- [User Guide](https://docs.micronaut.io/3.8.8/guide/index.html)
-- [API Reference](https://docs.micronaut.io/3.8.8/api/index.html)
-- [Configuration Reference](https://docs.micronaut.io/3.8.8/guide/configurationreference.html)
-- [Micronaut Guides](https://guides.micronaut.io/index.html)
----
+Запуск контейнера
 
-- [Shadow Gradle Plugin](https://plugins.gradle.org/plugin/com.github.johnrengelman.shadow)
-## Feature http-client documentation
+    docker run --platform linux/amd64 --publish 8080:8080 ll-o-micro
 
-- [Micronaut HTTP Client documentation](https://docs.micronaut.io/latest/guide/index.html#httpClient)
+Проверка
 
+    curl --location --request GET 'http://localhost:8080/health'
 
+200 OK
