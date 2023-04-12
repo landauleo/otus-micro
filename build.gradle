@@ -1,6 +1,6 @@
 plugins {
     id("com.github.johnrengelman.shadow") version "7.1.2"
-    id("io.micronaut.application") version "3.2.2"
+    id("io.micronaut.application") version "3.2.2" //на более новых версиях вылетает Exception in thread "main" java.lang.NoClassDefFoundError: io/micronaut/runtime/Micronaut
 }
 
 version = "0.1"
