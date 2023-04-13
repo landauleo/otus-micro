@@ -27,14 +27,16 @@ docker build --platform linux/amd64 -t tag
     ./gradlew clean build (в корне проекта)
 Создание image 
     
-    docker build --platform linux/amd64 -t ll-o-micro .
+    docker build --platform linux/amd64 -t ll-o-m .
 
 Запуск контейнера
 
-    docker run --platform linux/amd64 --publish 8000:8080 ll-o-micro
+    docker run --platform linux/amd64 --publish 8000:8080 ll-o-m
 
 Проверка
 
     curl --location 'http://localhost:8000/health'
 
-200 OK
+Pushing to Docker hub
+
+    docker push myteayourmilk/ll-o-m:latest
