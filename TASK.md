@@ -31,10 +31,10 @@ docker build --platform linux/amd64 -t tag
 
 Запуск контейнера
 
-    docker run --platform linux/amd64 --publish 8080:8080 ll-o-micro
+    docker run --platform linux/amd64 --publish 8000:8080 ll-o-micro
 
 Проверка
 
-    curl --location --request GET 'http://localhost:8080/health'
+    curl --location 'http://localhost:8000/health'
 
 200 OK

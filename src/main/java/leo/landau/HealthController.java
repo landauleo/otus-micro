@@ -8,8 +8,8 @@ import io.micronaut.http.annotation.Get;
 public class HealthController {
 
     @Get
-    public HttpResponse<?> index() {
-        return HttpResponse.ok();
+    public HttpResponse<HealthDto> index() {
+        return HttpResponse.ok().body(new HealthDto("OK"));
     }
 
 }
