@@ -1,0 +1,32 @@
+#описывает в скольких экземплярах запущен сервис, а также стратегию обновления на новую версию
+apiVersion: apps/v1 #определены самим Kubernetes и зависят от конкретной версии Kubernetes, которую вы используете
+kind: Deployment
+metadata:
+  name: ll-o-m-deployment
+spec: #Определяет желаемое состояние объекта Deployment.
+  replicas: 2
+  selector: #Определяет, какие поды должны быть управляемыми этим объектом
+    matchLabels: #Определяет метки (labels), по которым должны совпадать поды для управления
+      app: ll-o-m
+  template: #Определяет шаблон для создания подов
+    metadata:
+      labels:
+        app: ll-o-m
+    spec:
+      containers:
+        - name: ll-o-m-container
+          image: myteayourmilk/ll-o-m:latest
+          ports:
+            - containerPort: 8000 #Указывает номер порта в контейнере, который будет прослушиваться
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 5

@@ -1,0 +1,22 @@
+#описывает, как роутится внешний трафик
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ll-o-m-ingress
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+#  annotations: #Содержит аннотации, которые предоставляют дополнительную информацию
+#    kubernetes.io/ingress.class: "nginx" #Указывает класс Ingress-контроллера, который будет использоваться для управления этим Ingress
+#    nginx.ingress.kubernetes.io/rewrite-target: /$2 #Указывает перезапись пути запроса внутри Ingress-контроллера Nginx. В данном случае, /$2 означает, что путь запроса будет перезаписан на значение, соответствующее второй группе захвата (в регулярном выражении, указанном в дальнейшем)
+spec:
+  rules: #Определяет правила маршрутизации запросов
+    - host: arch.homework
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: ll-o-m-service
+                port:
+                  number: 8000
