@@ -18,7 +18,14 @@ docker build --platform linux/amd64 -t tag
 Более подробно можно прочитать в статье: https://programmerah.com/how-to-solve-docker-run-error-standard_init_linux-go219-exec-user-process-caused-exec-format-error-39221/
 ***
 ####Used commands:
-в DockerDesktop -> enable Kubernetes
-использование nginx ingress controller:
+- в DockerDesktop -> enable Kubernetes
+- проверяем кластер -> kubectl config get-contexts
+- brew install helm
+- использование nginx ingress controller:
 
+    
     kubectl create namespace m && helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx/ && helm repo update && helm install nginx ingress-nginx/ingress-nginx --namespace m -f nginx-ingress.yaml
+
+- проверяем создание namespaces -> kubectl get namespaces
+- заходим в директорию с манифестами -> kubectl apply -f .
+- дебажим и плачем kubectl logs <pod_name>
