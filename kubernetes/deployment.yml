@@ -3,7 +3,14 @@ apiVersion: apps/v1 #определены самим Kubernetes и завися�
 kind: Deployment
 metadata:
   name: ll-o-m-deployment
+  labels:
+    app: ll-o-m
 spec: #Определяет желаемое состояние объекта Deployment.
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
   replicas: 2
   selector: #Определяет, какие поды должны быть управляемыми этим объектом
     matchLabels: #Определяет метки (labels), по которым должны совпадать поды для управления
@@ -18,15 +25,27 @@ spec: #Определяет желаемое состояние объекта D
           image: myteayourmilk/ll-o-m:latest
           ports:
             - containerPort: 8000 #Указывает номер порта в контейнере, который будет прослушиваться
-          livenessProbe:
-            httpGet:
-              path: /health
-              port: 8000
-            initialDelaySeconds: 30
-            periodSeconds: 10
+              name: web #имя порта
           readinessProbe:
+            failureThreshold: 3
             httpGet:
+              httpHeaders:
+                - name: Accept
+                  value: application/json
               path: /health
               port: 8000
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 10
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              httpHeaders:
+                - name: Accept
+                  value: application/json
+              path: /health
+              port: 8000
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 10
             initialDelaySeconds: 10
-            periodSeconds: 5

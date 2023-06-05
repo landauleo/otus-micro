@@ -3,9 +3,8 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: ll-o-m-ingress
-  annotations:
-    kubernetes.io/ingress.class: "nginx"
-#  annotations: #Содержит аннотации, которые предоставляют дополнительную информацию
+  annotations: #Содержит аннотации, которые предоставляют дополнительную информацию
+    nginx.ingress.kubernetes.io/rewrite-target: /
 #    kubernetes.io/ingress.class: "nginx" #Указывает класс Ingress-контроллера, который будет использоваться для управления этим Ingress
 spec:
   ingressClassName: nginx
@@ -13,8 +12,8 @@ spec:
     - host: arch.homework
       http:
         paths:
-          - path: /
-            pathType: Prefix
+          - pathType: Prefix
+            path: /
             backend:
               service:
                 name: ll-o-m-service
