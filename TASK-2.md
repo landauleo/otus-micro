@@ -23,15 +23,13 @@ docker build --platform linux/amd64 -t tag
 - brew install helm
 - использование nginx ingress controller:
 
-    helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx/ && helm repo update && helm install nginx ingress-nginx/ingress-nginx -f nginx-ingress.yml
+
+    helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx/ && helm repo update && helm install nginx-ingress-controller ingress-nginx/ingress-nginx -f nginx-ingress.yml
+или без использования файла (я делала именно так)
+
+    helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx/ && helm repo update && helm install nginx-ingress-controller ingress-nginx/ingress-nginx --set controller.service.ports.http=2080
 
 - проверяем создание namespaces -> kubectl get namespaces
 - заходим в директорию с манифестами -> kubectl apply -f .
-- дебажим и плачем, полезные команды:
-
-
-    kubectl logs <pod_name>
-    kubectl describe service
-    kubectl exec -it pod/nginx-ingress-nginx-controller-5zrgd -- curl ll-o-m-service:80/health
-
+- привязываем хост arch.homework к IP docker desktop в hosts -> sudo nano /private/etc/hosts 
 - проверяем -> curl http://arch.homework/health
