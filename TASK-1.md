@@ -29,13 +29,17 @@ docker build --platform linux/amd64 -t tag
     
     docker build --platform linux/amd64 -t ll-o-m .
 
-Запуск контейнера
+Запуск контейнера (1й порт внутри хостовой машины будет привязан ко 2му порту внутри контейнера)
 
-    docker run --platform linux/amd64 --publish 8000:8080 ll-o-m
+    docker run --platform linux/amd64 --publish 8000:8000 ll-o-m
 
 Проверка
 
     curl --location 'http://localhost:8000/health'
+
+Tag
+
+    docker tag ll-o-m myteayourmilk/ll-o-m:latest
 
 Pushing to Docker hub
 
