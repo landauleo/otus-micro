@@ -1,15 +1,6 @@
 controller:
   kind: DaemonSet
-
-  reportNodeInternalIp: true
-
-  hostPort:
-    enabled: true
-    ports:
-      http: 2080
-      https: 443
-
-  service:
+  service: #создаст сервис NodePort для доступа к порту 2080 (HTTP)
     type: NodePort
     ports:
       http: 2080
