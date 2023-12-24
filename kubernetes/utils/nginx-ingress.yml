@@ -1,0 +1,15 @@
+controller:
+#  kind: DaemonSet
+#
+#  reportNodeInternalIp: true
+#
+#  hostPort: #начало блока настроек для прослушивания определенных портов на хосте -> будет прослушивать порты 2080 (HTTP) и 443 (HTTPS) на каждом узле кластера
+#    enabled: true
+#    ports:
+#      http: 2080
+#      https: 443
+
+  service: #создаст сервис NodePort для доступа к порту 2080 (HTTP)
+    type: NodePort
+    ports:
+      http: 2080
