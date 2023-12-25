@@ -26,6 +26,36 @@ spec: #Определяет желаемое состояние объекта D
           ports:
             - containerPort: 8000 #Указывает номер порта в контейнере, который будет прослушиваться
               name: web #имя порта
+          env:
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: users-configmap
+                  key: DB_HOST
+            - name: DB_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: users-configmap
+                  key: DB_PORT
+            - name: DB_DATABASE
+              valueFrom:
+                configMapKeyRef:
+                  name: users-configmap
+                  key: DB_DATABASE
+            - name: DB_USER
+                valueFrom:
+                  secretKeyRef:
+                    name: users-secret
+                    key: DB_USER
+                  - name: DB_PASSWORD
+                    valueFrom:
+                      secretKeyRef:
+                        name: users-secret
+                        key: DB_PASSWORD
+            volumes: #используются для монтирования чего-то в контейнере
+              - name: postgres.yml
+                persistentVolumeClaim:
+                  claimName: postgres.yml
           readinessProbe:
             failureThreshold: 3
             httpGet:

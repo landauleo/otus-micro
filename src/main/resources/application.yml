@@ -7,3 +7,15 @@ netty:
   default:
     allocator:
       max-order: 3
+datasources:
+  default:
+    url: jdbc:postgresql://postgres:5432/app #имя сервиса PostgreSQL из service.yml
+    driverClassName: org.postgresql.Driver
+    username: postgres
+    password: password
+    schema-generate: CREATE_DROP
+    dialect: POSTGRES
+    pooled: true
+    max-active: 10
+    max-idle: 10
+    validation-query: "SELECT 1"
