@@ -1,18 +1,42 @@
 package leo.landau;
 
-import io.micronaut.core.annotation.Introspected;
-import io.micronaut.data.annotation.Id;
+import io.micronaut.serde.annotation.Serdeable;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
 
-@Introspected
+//@Data/@Getter вообще тут не работают... https://stackoverflow.com/a/75319286
+@Entity
+@Serdeable
+//@AllArgsConstructor
+//@NoArgsConstructor// когда сразу не подключил lombock и забыл, что нужны конструкторы
 public class User {
 
     @Id
+    @GeneratedValue
     private Long id;
+
     private String username;
+
     private String firstName;
+
     private String lastName;
+
     private String email;
+
     private String phone;
+
+    public User() {
+    }
+
+    public User(Long id, String username, String firstName, String lastName, String email, String phone) {
+        this.id = id;
+        this.username = username;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.phone = phone;
+    }
 
     public Long getId() {
         return id;

@@ -1,32 +1,33 @@
 package leo.landau;
 
 import java.util.Optional;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Delete;
 import io.micronaut.http.annotation.Get;
+import io.micronaut.http.annotation.PathVariable;
 import io.micronaut.http.annotation.Post;
 import io.micronaut.http.annotation.Put;
+import jakarta.inject.Inject;
 
 @Controller("/user")
 public class UserController {
 
-    private final UserRepository userRepository;
-
-    public UserController(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+    @Inject
+    UserRepository userRepository;
 
     @Post
-    public HttpResponse<User> createUser(@Body User user) {
+    public HttpResponse<User> createUser(@Body @Valid @NotNull User user) {
         User savedUser = userRepository.save(user);
         return HttpResponse.created(savedUser);
     }
 
     @Get("/{userId}")
-    public HttpResponse<User> getUser(Long userId) {
+    public HttpResponse<User> getUser(@PathVariable(name = "userId") Long userId) {
         Optional<User> optionalUser = userRepository.findById(userId);
         if (optionalUser.isPresent()) {
             return HttpResponse.ok(optionalUser.get());
