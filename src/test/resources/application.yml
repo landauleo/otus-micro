@@ -19,11 +19,11 @@ datasources:
     pooled: true
     validation-query: "SELECT 1"
 jpa:
-  default:
-    properties:
-      hibernate:
-        bytecode:
-          provider: none
+#  default:
+#    properties:
+#      hibernate:
+#        bytecode:
+#          provider: none
     entity-scan:
       packages: 'leo.landau'
 io:

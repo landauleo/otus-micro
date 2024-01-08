@@ -12,4 +12,11 @@ public class HealthDto {
         this.status = status;
     }
 
+    public HealthDto() {
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
 }
