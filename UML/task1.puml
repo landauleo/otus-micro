@@ -1,0 +1,26 @@
+@startuml
+actor Client
+actor "Auth Service" as AuthService
+actor "Location Service" as LocationService
+actor "Pets Service" as PetsService
+actor "Notification Service" as NotificationService
+
+Client -> AuthService : Authenticate User
+AuthService -> Client : Return Token
+
+Client -> LocationService : Get Current Location (with Token)
+LocationService -> Client : Return Location
+
+Client -> PetsService : Get Lost Pets List (with Token, Location)
+PetsService -> Client : Return Lost Pets List
+
+Client -> PetsService : Get Pet Details (with Token, Pet ID)
+PetsService -> Client : Return Pet Details
+
+Client -> PetsService : Pet Found (with Token, Pet ID, Photo)
+PetsService -> Client : Confirm Pet Found
+
+PetsService -> NotificationService : Send Found Notification (Pet ID)
+NotificationService -> Owner : Notify Owner (Pet Found)
+NotificationService -> InterestedParties : Notify Interested Parties (Pet Found)
+@enduml
