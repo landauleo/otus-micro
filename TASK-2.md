@@ -1,14 +1,18 @@
 ###Задание:
-Написать манифесты для k8s
+Обернуть приложение в docker-образ и запушить его на Dockerhub
 ###Описание/Пошаговая инструкция выполнения домашнего задания:
-1. Написать манифесты для деплоя в k8s для этого сервиса
-2. Манифесты должны описывать сущности: Deployment, Service, Ingress. 
-3. В Deployment могут быть указаны Liveness, Readiness пробы.
-4. Количество реплик должно быть не меньше 2. Image контейнера должен быть указан с Dockerhub. 
-5. Хост в ингрессе должен быть arch.homework. В итоге после применения манифестов GET запрос на http://arch.homework/health должен отдавать {“status”: “OK”}. 
-6. На выходе предоставить 
-- ссылку на github c манифестами. Манифесты должны лежать в одной директории, так чтобы можно было их все применить одной командой kubectl apply -f . 
-- url, по которому можно будет получить ответ от сервиса (либо тест в postmanе).
+1. Создать минимальный сервис, который
+- отвечает на порту 8000
+- имеет http-метод:
+GET /health/
+RESPONSE: {"status": "OK"}
+2. Собрать локально образ приложения в докер
+3. Запушить образ в dockerhub
+
+На выходе необходимо предоставить
+имя репозитория и тэг на Dockerhub
+
+ссылку на github c Dockerfile, либо приложить Dockerfile в ДЗ
 
 Обратите внимание, что при сборке на m1 при запуске вашего контейнера на стандартных платформах будет ошибка такого вида:
 standard_init_linux.go:228: exec user process caused: exec format error
@@ -18,18 +22,25 @@ docker build --platform linux/amd64 -t tag
 Более подробно можно прочитать в статье: https://programmerah.com/how-to-solve-docker-run-error-standard_init_linux-go219-exec-user-process-caused-exec-format-error-39221/
 ***
 ####Used commands:
-- в DockerDesktop -> enable Kubernetes
-- проверяем кластер -> kubectl config get-contexts
-- brew install helm
-- использование nginx ingress controller:
+Пререквизиты -> создание executable файла:
 
+    ./gradlew clean build (в корне проекта)
+Создание image 
+    
+    docker build --platform linux/amd64 -t ll-o-m .
 
-    helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx/ && helm repo update && helm install nginx-ingress-controller ingress-nginx/ingress-nginx -f nginx-ingress.yml
-или без использования файла (я делала именно так)
+Запуск контейнера (1й порт внутри хостовой машины будет привязан ко 2му порту внутри контейнера)
 
-    helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx/ && helm repo update && helm install nginx-ingress-controller ingress-nginx/ingress-nginx --set controller.service.ports.http=2080
+    docker run --platform linux/amd64 --publish 8000:8000 ll-o-m
 
-- проверяем создание namespaces -> kubectl get namespaces
-- заходим в директорию с манифестами -> kubectl apply -f .
-- привязываем хост arch.homework к IP docker desktop в hosts -> sudo nano /private/etc/hosts 
-- проверяем -> curl http://arch.homework/health
+Проверка
+
+    curl --location 'http://localhost:8000/health'
+
+Tag
+
+    docker tag ll-o-m myteayourmilk/ll-o-m:latest
+
+Pushing to Docker hub
+
+    docker push myteayourmilk/ll-o-m:latest
