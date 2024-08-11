@@ -22,8 +22,15 @@ class MicroHomeworkTest {
     @Client("/")
     HttpClient client;
 
+    @Inject
+    BookRepository bookRepository;
+
     @Test
-    public void testHello() {
+    void testHello() {
+        Book book = new Book();
+        book.setTitle("The Stand");
+        book.setPages(1000);
+        bookRepository.save(book);
         HttpRequest<String> request = HttpRequest.GET("/health");
         HttpResponse<Object> response = client.toBlocking().exchange(request);
 
