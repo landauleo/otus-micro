@@ -55,8 +55,8 @@ PGPASSWORD=mypassword psql --host 127.0.0.1 -U myuser -d usersdb -p 5432
 
 когда хочешь начать с чистого листа:
 ```
-kubectl delete all --all
 helm uninstall my-postgresql   
+kubectl delete all --all
 kubectl delete pvc --all
 kubectl delete secret --all
 kubectl delete configmap --all

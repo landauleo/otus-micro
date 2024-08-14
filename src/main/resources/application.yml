@@ -6,14 +6,11 @@ micronaut:
 
 datasources:
   default:
-#    url: jdbc:postgresql://localhost:5432/postgres
     url: jdbc:postgresql://my-postgresql.default.svc.cluster.local:5432/usersdb
     username: postgres
-    password: postgres
+    password: cG9zdGdyZXM=
     driverClassName: org.postgresql.Driver
     dialect: POSTGRES
-#    schema-generate: CREATE # Автоматическое создание схемы на основании сущностей
-#    schema-generate-create-schemas: true # Указывает, что нужно создавать схемы, если они не существуют
 
 flyway:
   enabled: true
