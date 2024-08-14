@@ -61,3 +61,6 @@ kubectl delete pvc --all
 kubectl delete secret --all
 kubectl delete configmap --all
 ```
+
+Newman
+![alt text](./img/hw4.png "Title")
