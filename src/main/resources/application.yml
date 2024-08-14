@@ -19,7 +19,6 @@ flyway:
     default:
       schemas: micro
       enabled: true
-  #  locations: classpath:db/migration
 
 jpa:
   default:
@@ -32,6 +31,7 @@ jpa:
           auto: none
           #тут очень странная тема, так как локально flyway отрабатывает, и создает схему micro, а вот в k8s - нет,
           #поэтому поставила сюда костыль в виде просьбы хиберу самому создавать схемы, если что-то не так идет
+          #т.e. эта опция включается только в configmap
 #          create_namespaces: true
 
 logger:
@@ -42,12 +42,3 @@ logger:
         sql: DEBUG
     org:
       flywaydb: DEBUG
-
-management:
-  endpoints:
-    jmx:
-      exposure:
-        exclude: '*'
-    web:
-      exposure:
-        exclude: '*'
