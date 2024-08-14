@@ -1,0 +1,10 @@
+auth:
+  username: postgres
+  postgresPassword: postgres
+  password: postgres
+  database: usersdb
+
+primary:
+  persistence:
+    enabled: true
+    size: 1Gi

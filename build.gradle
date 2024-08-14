@@ -1,6 +1,7 @@
 plugins {
     id("com.github.johnrengelman.shadow") version "7.1.2"
-    id("io.micronaut.application") version "3.2.2" //на более новых версиях вылетает Exception in thread "main" java.lang.NoClassDefFoundError: io/micronaut/runtime/Micronaut
+    id("io.micronaut.application") version "3.2.2"
+    //на более новых версиях вылетает Exception in thread "main" java.lang.NoClassDefFoundError: io/micronaut/runtime/Micronaut
     id("io.micronaut.library") version "3.2.2"
 }
 
@@ -14,45 +15,43 @@ repositories {
 //Annotation Processor используется для автоматической генерации кода на этапе компиляции, на основе аннотаций, присутствующих в исходном коде
 dependencies {
     annotationProcessor("io.micronaut:micronaut-http-validation")
-    implementation("io.micronaut:micronaut-http-client")
+    implementation("io.micronaut:micronaut-http-client:3.2.2")
     implementation("io.micronaut:micronaut-jackson-databind")
     implementation("jakarta.annotation:jakarta.annotation-api")
-    runtimeOnly("ch.qos.logback:logback-classic")
-    implementation("io.micronaut:micronaut-validation")
+    implementation("io.micronaut:micronaut-validation:3.2.2")
 
-    annotationProcessor("io.micronaut.data:micronaut-data-processor")
-    implementation("io.micronaut:micronaut-runtime")
-    implementation("io.micronaut.data:micronaut-data-hibernate-jpa")
+    annotationProcessor("io.micronaut.data:micronaut-data-processor:3.2.2")
+    implementation("io.micronaut:micronaut-runtime:3.2.2")
     implementation("io.micronaut.data:micronaut-data-spring-jpa:3.2.2")
     implementation("org.springframework:spring-orm:5.2.0.RELEASE")
     implementation("io.micronaut.data:micronaut-data-spring:3.2.2")
-    annotationProcessor("io.micronaut:micronaut-inject-java")
+//            {
+//                exclude group: 'ch.qos.logback', module: 'logback-classic'
+//            }
+    annotationProcessor("io.micronaut:micronaut-inject-java:3.2.2")
+
+    //Swagger
+    annotationProcessor("io.micronaut.openapi:micronaut-openapi:3.2.2")
+    implementation("io.swagger.core.v3:swagger-annotations")
+    implementation("io.micronaut.openapi:micronaut-openapi")
 
     runtimeOnly("org.postgresql:postgresql:42.2.23")
 
-//    implementation("io.micronaut.beanvalidation:micronaut-hibernate-validator")
-//    annotationProcessor("io.micronaut.validation:micronaut-validation-processor")
+    implementation("org.flywaydb:flyway-core")
+    implementation("io.micronaut.flyway:micronaut-flyway")
 
-    // Testcontainers для PostgreSQL
-    testImplementation("org.testcontainers:testcontainers:1.16.0")
-    testImplementation("org.testcontainers:postgresql:1.16.0")
-    testImplementation("org.testcontainers:junit-jupiter:1.16.0")
+    annotationProcessor("io.micronaut:micronaut-validation:3.2.2")
+    implementation("io.micronaut:micronaut-inject:3.2.2")
 
-    // Micronaut Test
-    testImplementation("io.micronaut.test:micronaut-test-junit5:3.2.2")
-
-
-
-
-    annotationProcessor("io.micronaut:micronaut-validation")
-    implementation("io.micronaut:micronaut-inject")
     implementation("javax.annotation:javax.annotation-api")
-    implementation("io.micronaut:micronaut-http-server-netty")
-    implementation("io.micronaut:micronaut-http-client")
-    implementation("io.micronaut.sql:micronaut-jdbc-hikari")
-    implementation("io.micronaut.sql:micronaut-hibernate-jpa")
+    implementation("io.micronaut:micronaut-http-server-netty:3.2.2")
+    implementation("io.micronaut.sql:micronaut-jdbc-hikari:3.2.2")
+    implementation("io.micronaut.sql:micronaut-hibernate-jpa:3.2.2")
 }
 
+configurations.all {
+    exclude module: 'slf4j-nop'
+}
 
 application {
     mainClass.set("leo.landau.Application")
