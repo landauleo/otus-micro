@@ -1,31 +1,41 @@
-#описывает в скольких экземплярах запущен сервис, а также стратегию обновления на новую версию
-apiVersion: apps/v1 #определены самим Kubernetes и зависят от конкретной версии Kubernetes, которую вы используете
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: ll-o-m-deployment
   labels:
     app: ll-o-m
-spec: #Определяет желаемое состояние объекта Deployment.
+spec:
   strategy:
     rollingUpdate:
       maxSurge: 1
       maxUnavailable: 1
     type: RollingUpdate
   replicas: 2
-  selector: #Определяет, какие поды должны быть управляемыми этим объектом
-    matchLabels: #Определяет метки (labels), по которым должны совпадать поды для управления
+  selector:
+    matchLabels:
       app: ll-o-m
-  template: #Определяет шаблон для создания подов
+  template:
     metadata:
       labels:
         app: ll-o-m
     spec:
       containers:
         - name: ll-o-m-container
-          image: myteayourmilk/ll-o-m:latest
+          image: myteayourmilk/ll-o-m:test
           ports:
-            - containerPort: 8000 #Указывает номер порта в контейнере, который будет прослушиваться
-              name: web #имя порта
+            - containerPort: 8000
+              name: web
+          env:
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret
+                  key: DB_USERNAME
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret
+                  key: DB_PASSWORD
           readinessProbe:
             failureThreshold: 3
             httpGet:
@@ -49,3 +59,11 @@ spec: #Определяет желаемое состояние объекта D
             successThreshold: 1
             timeoutSeconds: 10
             initialDelaySeconds: 10
+          volumeMounts:
+            - name: config-volume
+              mountPath: /config/application.yml
+              subPath: application.yml
+      volumes:
+        - name: config-volume
+          configMap:
+            name: app-config

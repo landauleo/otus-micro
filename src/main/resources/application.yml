@@ -3,7 +3,42 @@ micronaut:
     port: 8000
   application:
     name: microHomework
-netty:
+
+datasources:
   default:
-    allocator:
-      max-order: 3
+    url: jdbc:postgresql://my-postgresql.default.svc.cluster.local:5432/usersdb
+    username: postgres
+    password: cG9zdGdyZXM=
+    driverClassName: org.postgresql.Driver
+    dialect: POSTGRES
+
+flyway:
+  enabled: true
+  locations: classpath:db/migration
+  datasources:
+    default:
+      schemas: micro
+      enabled: true
+
+jpa:
+  default:
+    entity-scan:
+      packages: 'leo.landau'
+    properties:
+      hibernate:
+        show_sql: true
+        hbm2ddl:
+          auto: none
+          #тут очень странная тема, так как локально flyway отрабатывает, и создает схему micro, а вот в k8s - нет,
+          #поэтому поставила сюда костыль в виде просьбы хиберу самому создавать схемы, если что-то не так идет
+          #т.e. эта опция включается только в configmap
+#          create_namespaces: true
+
+logger:
+  level:
+    root: INFO
+    io:
+      micronaut:
+        sql: DEBUG
+    org:
+      flywaydb: DEBUG

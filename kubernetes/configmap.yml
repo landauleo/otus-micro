@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+data:
+  application.yml: |
+    flyway:
+      enabled: true
+      locations: classpath:db/migration
+      datasources:
+        default:
+          schemas: micro
+          enabled: true
+    datasource:
+      url: jdbc:postgresql://my-postgresql.default.svc.cluster.local:5432/usersdb
+      username: ${DB_USERNAME}
+      password: ${DB_PASSWORD}
+      driver-class-name: org.postgresql.Driver
+      dialect: POSTGRES
+    jpa:
+      default:
+        entity-scan:
+          packages: 'leo.landau'
+        properties:
+          hibernate:
+            show_sql: true
+            hbm2ddl:
+              auto: none 
+#              create_namespaces: true
