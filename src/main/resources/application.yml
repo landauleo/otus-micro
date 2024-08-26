@@ -3,12 +3,20 @@ micronaut:
     port: 8000
   application:
     name: microHomework
+  metrics:
+    enabled: true
+    export:
+      prometheus:
+        enabled: true
+        step: PT1M
+        descriptions: true
 
 datasources:
   default:
     url: jdbc:postgresql://my-postgresql.default.svc.cluster.local:5432/usersdb
     username: postgres
     password: cG9zdGdyZXM=
+#    url: jdbc:postgresql://localhost:5432/postgres
     driverClassName: org.postgresql.Driver
     dialect: POSTGRES
 
@@ -42,3 +50,8 @@ logger:
         sql: DEBUG
     org:
       flywaydb: DEBUG
+
+#IMPORTANT NOTE: Once set up, the Prometheus-compatible metrics can be scraped from the path /prometheus
+endpoints:
+  prometheus:
+    sensitive: false #делаем метрики свободными для просмотра всем
