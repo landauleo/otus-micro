@@ -1,0 +1,14 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: service-prometheus
+  labels:
+    app: ll-o-m
+spec:
+  selector:
+    app: ll-o-m
+  ports:
+    - protocol: TCP
+      name: web #не знала, валидно ли назвать этот порт тут как metrics, если в других конфигах он уже с другим именем
+      port: 8000
+      targetPort: 8000

@@ -1,0 +1,21 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: service-monitor-prometheus
+  labels:
+    app: ll-o-m
+
+spec:
+  endpoints:
+    - port: web
+      scrapeTimeout: 30s
+      path: /prometheus
+      honorLabels: true
+      scheme: http
+  #  jobLabel: stack
+  namespaceSelector:
+    matchNames:
+      - default
+  selector:
+    matchLabels:
+      app: ll-o-m

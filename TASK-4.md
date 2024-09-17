@@ -63,4 +63,4 @@ kubectl delete configmap --all
 ```
 
 Newman
-![alt text](./img/hw4.png "Title")
+![alt text](static/hw4.png "Title")
