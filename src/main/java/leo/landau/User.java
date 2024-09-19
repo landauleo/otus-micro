@@ -24,13 +24,16 @@ public class User {
 
     private String phone;
 
-    public User(Long id, String username, String firstname, String lastname, String email, String phone) {
+    private String hashedPassword;
+
+    public User(Long id, String username, String firstname, String lastname, String email, String phone, String hashedPassword) {
         this.id = id;
         this.username = username;
         this.firstname = firstname;
         this.lastname = lastname;
         this.email = email;
         this.phone = phone;
+        this.hashedPassword = hashedPassword;
     }
 
     public User() {
@@ -82,6 +85,14 @@ public class User {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getHashedPassword() {
+        return hashedPassword;
+    }
+
+    public void setHashedPassword(String hashedPassword) {
+        this.hashedPassword = hashedPassword;
     }
 
 }

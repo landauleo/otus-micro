@@ -3,6 +3,8 @@ package leo.landau;
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 
+import io.micronaut.security.authentication.Authentication;
+import io.micronaut.security.authentication.AuthorizationException;
 import jakarta.inject.Singleton;
 
 @Singleton
@@ -10,14 +12,24 @@ import jakarta.inject.Singleton;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
 
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
-    public UserDto createUser(UserDto userDto) {
-        User user = new User(userDto.getId(), userDto.getUsername(), userDto.getFirstname(), userDto.getLastname(), userDto.getEmail(), userDto.getPhone());
+    public UserDto registerUser(UserDto userDto) {
+        String hashedPassword = passwordEncoder.encode(userDto.getPassword());
+        User user = new User();
+        user.setId(userDto.getId());
+        user.setUsername(userDto.getUsername());
+        user.setFirstname(userDto.getFirstname());
+        user.setLastname(userDto.getLastname());
+        user.setEmail(userDto.getEmail());
+        user.setPhone(userDto.getPhone());
+        user.setHashedPassword(hashedPassword);
         userRepository.save(user);
         return userDto;
     }
@@ -29,7 +41,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto updateUser(Long userId, UserDto userDto) {
+    public User findByUsername(String username) {
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+    }
+
+    @Override
+    public UserDto updateUser(Long userId, UserDto userDto, Authentication requester) {
+        checkAccess(userId, requester);
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
         user.setUsername(userDto.getUsername());
@@ -43,6 +62,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUser(Long userId) {
         userRepository.deleteById(userId);
+    }
+
+    private void checkAccess(Long requestedUserId, Authentication requester) {
+        if (!findByUsername(requester.getName()).getId().equals(requestedUserId)) {
+            throw new AuthorizationException(requester);
+        }
     }
 
 }

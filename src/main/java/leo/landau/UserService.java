@@ -1,11 +1,16 @@
 package leo.landau;
 
+import io.micronaut.security.authentication.Authentication;
+
 public interface UserService {
-    UserDto createUser(UserDto userDto);
+
+    UserDto registerUser(UserDto userDto);
 
     UserDto findUserById(Long userId);
 
-    UserDto updateUser(Long userId, UserDto userDto);
+    User findByUsername(String username);
+
+    UserDto updateUser(Long userId, UserDto userDto, Authentication requester);
 
     void deleteUser(Long userId);
 

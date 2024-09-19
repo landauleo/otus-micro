@@ -47,6 +47,13 @@ dependencies {
 
     //Prometheus
     implementation("io.micronaut.micrometer:micronaut-micrometer-registry-prometheus")
+
+    //Security
+    annotationProcessor("io.micronaut.security:micronaut-security-annotations:3.2.2")
+    implementation("io.micronaut.security:micronaut-security-jwt:3.2.2")
+    implementation("io.reactivex.rxjava2:rxjava:2.2.21")
+    implementation("org.mindrot:jbcrypt:0.4")
+
 }
 
 configurations.all {

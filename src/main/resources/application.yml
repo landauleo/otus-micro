@@ -10,6 +10,8 @@ micronaut:
         enabled: true
         step: PT1M
         descriptions: true
+  security:
+    authentication: bearer
 
 datasources:
   default:
