@@ -47,9 +47,19 @@ kubectl get all
 
 ```
 
-Newman в /resources:
+/resources:
 ```
 newman run postman_collection_auth.json
+```
+
+когда хочешь начать с чистого листа:
+```
+helm uninstall stack
+helm uninstall my-postgresql
+kubectl delete all --all
+kubectl delete pvc --all
+kubectl delete secret --all
+kubectl delete configmap --all
 ```
 
 Scheme:
