@@ -1,11 +1,13 @@
 package leo.landau;
 
-import io.micronaut.context.annotation.Executable;
+import java.util.Optional;
+
 import io.micronaut.data.annotation.Repository;
-import io.micronaut.data.jpa.repository.JpaRepository;
 import io.micronaut.data.repository.CrudRepository;
 
 @Repository
 interface UserRepository extends CrudRepository<User, Long> {
+
+    Optional<User> findByUsername(String username);
 
 }

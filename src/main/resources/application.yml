@@ -10,13 +10,15 @@ micronaut:
         enabled: true
         step: PT1M
         descriptions: true
+  security:
+    authentication: bearer
 
 datasources:
   default:
     url: jdbc:postgresql://my-postgresql.default.svc.cluster.local:5432/usersdb
-    username: postgres
-    password: cG9zdGdyZXM=
-#    url: jdbc:postgresql://localhost:5432/postgres
+    #    url: jdbc:postgresql://localhost:5432/postgres
+    username: ${DB_USERNAME} # извлекается из переменной окружения
+    password: ${DB_PASSWORD} # извлекается из переменной окружения
     driverClassName: org.postgresql.Driver
     dialect: POSTGRES
 

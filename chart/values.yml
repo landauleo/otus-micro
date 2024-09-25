@@ -1,7 +1,7 @@
 auth:
   username: postgres
   postgresPassword: postgres
-  password: cG9zdGdyZXM=
+  password: postgres
   database: usersdb
 
 primary:

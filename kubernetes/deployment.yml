@@ -26,12 +26,12 @@ spec:
             - containerPort: 8000
               name: web
           env:
-            - name: DB_USERNAME
+            - name: DB_USERNAME #переменная окружения, чтобы можно было также запихивать её в application.yml
               valueFrom:
                 secretKeyRef:
                   name: db-secret
                   key: DB_USERNAME
-            - name: DB_PASSWORD
+            - name: DB_PASSWORD #переменная окружения, чтобы можно было также запихивать её в application.yml
               valueFrom:
                 secretKeyRef:
                   name: db-secret

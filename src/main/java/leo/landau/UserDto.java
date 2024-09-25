@@ -22,6 +22,9 @@ public class UserDto {
     @Schema(description = "Phone", example = "+71002003040")
     private String phone;
 
+    @Schema(description = "Pass", example = "qwerty123")
+    private String password;
+
     public UserDto(Long id, String username, String firstname, String lastname, String email, String phone) {
         this.id = id;
         this.username = username;
@@ -29,6 +32,7 @@ public class UserDto {
         this.lastname = lastname;
         this.email = email;
         this.phone = phone;
+        this.password = password;
     }
 
     public UserDto() {
@@ -80,6 +84,10 @@ public class UserDto {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getPassword() {
+        return password;
     }
 
     static UserDto toDto(User user) {
