@@ -1,4 +1,4 @@
-package leo.landau;
+package leo.landau.model;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -90,7 +90,7 @@ public class UserDto {
         return password;
     }
 
-    static UserDto toDto(User user) {
+    public static UserDto toDto(User user) {
         return new UserDto(user.getId(), user.getUsername(), user.getFirstname(), user.getLastname(), user.getEmail(),
                 user.getPhone());
     }

@@ -1,4 +1,4 @@
-package leo.landau;
+package leo.landau.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

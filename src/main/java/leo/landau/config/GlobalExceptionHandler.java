@@ -1,4 +1,4 @@
-package leo.landau;
+package leo.landau.config;
 
 import javax.persistence.EntityNotFoundException;
 
