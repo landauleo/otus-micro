@@ -76,5 +76,4 @@ kubectl delete configmap --all
 Scheme:
 ![alt text](static/order.svg "Order scheme")
 
-Newman results:
 
