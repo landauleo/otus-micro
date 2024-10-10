@@ -11,7 +11,11 @@ import leo.landau.repository.NotificationRepository;
 @Transactional
 public class NotificationService {
 
-    private NotificationRepository notificationRepository;
+    private final NotificationRepository notificationRepository;
+
+    public NotificationService(NotificationRepository notificationRepository) {
+        this.notificationRepository = notificationRepository;
+    }
 
     public Notification sendNotification(Long userId, String message) {
         Notification notification = new Notification();

@@ -9,7 +9,7 @@ import jakarta.inject.Singleton;
 import leo.landau.config.BCryptPasswordEncoder;
 import leo.landau.model.User;
 import leo.landau.model.UserDto;
-import leo.landau.UserRepository;
+import leo.landau.repository.UserRepository;
 
 @Singleton
 @Transactional
@@ -17,18 +17,18 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
-    private AccountService accountService;
+    private final AccountServiceImpl accountService;
 
-    public UserServiceImpl(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder, AccountServiceImpl accountService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.accountService = accountService;
     }
 
     @Override
     public UserDto registerUser(UserDto userDto) {
         String hashedPassword = passwordEncoder.encode(userDto.getPassword());
         User user = new User();
-        user.setId(userDto.getId());
         user.setUsername(userDto.getUsername());
         user.setFirstname(userDto.getFirstname());
         user.setLastname(userDto.getLastname());
@@ -36,9 +36,10 @@ public class UserServiceImpl implements UserService {
         user.setPhone(userDto.getPhone());
         user.setHashedPassword(hashedPassword);
 
+        userRepository.save(user);
+
         accountService.createAccount(user.getId());
 
-        userRepository.save(user);
         return userDto;
     }
 

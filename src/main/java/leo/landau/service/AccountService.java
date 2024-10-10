@@ -1,40 +1,17 @@
 package leo.landau.service;
 
 import java.math.BigDecimal;
-import javax.transaction.Transactional;
 
-import jakarta.inject.Singleton;
 import leo.landau.model.Account;
-import leo.landau.repository.AccountRepository;
 
-@Singleton
-@Transactional
-public class AccountService {
+public interface AccountService {
 
-    private AccountRepository accountRepository;
+    Account createAccount(Long userId);
 
-    public Account createAccount(Long userId) {
-        return accountRepository.save(new Account(userId, BigDecimal.ZERO));
-    }
+    Account deposit(Long userId, BigDecimal amount);
 
-    public Account deposit(Long userId, BigDecimal amount) {
-        Account account = accountRepository.findByUserId(userId);
-        account.setBalance(account.getBalance().add(amount));
-        return accountRepository.save(account);
-    }
+    boolean withdraw(Long userId, BigDecimal amount);
 
-    public boolean withdraw(Long userId, BigDecimal amount) {
-        Account account = accountRepository.findByUserId(userId);
-        if (account.getBalance().compareTo(amount) >= 0) {
-            account.setBalance(account.getBalance().subtract(amount));
-            accountRepository.save(account);
-            return true;
-        }
-        return false;
-    }
-
-    public BigDecimal getBalance(Long userId) {
-        return accountRepository.findByUserId(userId).getBalance();
-    }
+    BigDecimal getBalance(Long userId);
 
 }

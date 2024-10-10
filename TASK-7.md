@@ -44,10 +44,7 @@ docker push myteayourmilk/ll-o-m:test
 /chart
 ```
 helm repo update
-```
-
-/prometheus
-```
+helm repo add bitnami https://charts.bitnami.com/bitnami
 helm install my-postgresql --values values.yml bitnami/postgresql
 ```
 
@@ -60,13 +57,14 @@ kubectl get all
 
 /resources:
 ```
-newman run postman_collection_auth.json
+newman run postman_collection_order.json
 ```
 
 когда хочешь начать с чистого листа:
 ```
 helm uninstall stack
 helm uninstall my-postgresql
+hwlm repo remove bitnami
 kubectl delete all --all
 kubectl delete pvc --all
 kubectl delete secret --all
@@ -75,5 +73,8 @@ kubectl delete configmap --all
 
 Scheme:
 ![alt text](static/order.svg "Order scheme")
+
+Newman results:
+![alt text](static/hw7.png "Order tests")
 
 

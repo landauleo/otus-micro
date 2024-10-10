@@ -11,9 +11,15 @@ import leo.landau.model.OrderStatus;
 @Transactional
 public class OrderService {
 
-    private OrderRepository orderRepository;
-    private AccountService accountService;
-    private NotificationService notificationService;
+    private final OrderRepository orderRepository;
+    private final AccountServiceImpl accountService;
+    private final NotificationService notificationService;
+
+    public OrderService(OrderRepository orderRepository, AccountServiceImpl accountService, NotificationService notificationService) {
+        this.orderRepository = orderRepository;
+        this.accountService = accountService;
+        this.notificationService = notificationService;
+    }
 
     public Order createOrder(Order order) {
         boolean paymentSuccessful = accountService.withdraw(order.getUserId(), order.getAmount());

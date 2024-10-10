@@ -13,7 +13,7 @@ import io.micronaut.security.rules.SecurityRule;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.inject.Inject;
 import leo.landau.model.Account;
-import leo.landau.service.AccountService;
+import leo.landau.service.AccountServiceImpl;
 
 @Tag(name = "user")
 @Controller("/account")
@@ -21,26 +21,26 @@ import leo.landau.service.AccountService;
 public class AccountController {
 
     @Inject
-    private AccountService accountService;
+    private AccountServiceImpl accountServiceImpl;
 
     @Post
     public HttpResponse<Account> createAccount(@QueryValue Long userId) {
-        return HttpResponse.ok(accountService.createAccount(userId));
+        return HttpResponse.ok(accountServiceImpl.createAccount(userId));
     }
 
     @Post("/deposit")
     public HttpResponse<Account> deposit(@QueryValue Long userId, @QueryValue BigDecimal amount) {
-        return HttpResponse.ok(accountService.deposit(userId, amount));
+        return HttpResponse.ok(accountServiceImpl.deposit(userId, amount));
     }
 
     @Post("/withdraw")
     public HttpResponse<Boolean> withdraw(@QueryValue Long userId, @QueryValue BigDecimal amount) {
-        return HttpResponse.ok(accountService.withdraw(userId, amount));
+        return HttpResponse.ok(accountServiceImpl.withdraw(userId, amount));
     }
 
     @Get("/{userId}")
     public HttpResponse<BigDecimal> getBalance(@PathVariable Long userId) {
-        return HttpResponse.ok(accountService.getBalance(userId));
+        return HttpResponse.ok(accountServiceImpl.getBalance(userId));
     }
 
 }

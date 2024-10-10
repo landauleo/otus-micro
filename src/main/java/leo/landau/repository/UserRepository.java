@@ -7,7 +7,7 @@ import io.micronaut.data.repository.CrudRepository;
 import leo.landau.model.User;
 
 @Repository
-interface UserRepository extends CrudRepository<User, Long> {
+public interface UserRepository extends CrudRepository<User, Long> {
 
     public Optional<User> findByUsername(String username);
 
