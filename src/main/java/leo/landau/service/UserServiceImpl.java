@@ -1,4 +1,4 @@
-package leo.landau;
+package leo.landau.service;
 
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
@@ -6,6 +6,10 @@ import javax.transaction.Transactional;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.authentication.AuthorizationException;
 import jakarta.inject.Singleton;
+import leo.landau.config.BCryptPasswordEncoder;
+import leo.landau.model.User;
+import leo.landau.model.UserDto;
+import leo.landau.repository.UserRepository;
 
 @Singleton
 @Transactional
@@ -13,24 +17,29 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final AccountServiceImpl accountService;
 
-    public UserServiceImpl(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder, AccountServiceImpl accountService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.accountService = accountService;
     }
 
     @Override
     public UserDto registerUser(UserDto userDto) {
         String hashedPassword = passwordEncoder.encode(userDto.getPassword());
         User user = new User();
-        user.setId(userDto.getId());
         user.setUsername(userDto.getUsername());
         user.setFirstname(userDto.getFirstname());
         user.setLastname(userDto.getLastname());
         user.setEmail(userDto.getEmail());
         user.setPhone(userDto.getPhone());
         user.setHashedPassword(hashedPassword);
+
         userRepository.save(user);
+
+        accountService.createAccount(user.getId());
+
         return userDto;
     }
 

@@ -1,6 +1,8 @@
-package leo.landau;
+package leo.landau.service;
 
 import io.micronaut.security.authentication.Authentication;
+import leo.landau.model.User;
+import leo.landau.model.UserDto;
 
 public interface UserService {
 

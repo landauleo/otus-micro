@@ -1,4 +1,4 @@
-package leo.landau;
+package leo.landau.model;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
