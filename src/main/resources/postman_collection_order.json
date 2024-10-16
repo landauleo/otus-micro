@@ -1,0 +1,482 @@
+{
+  "info": {
+    "name": "User-Billing-Order Flow",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://arch.homework"
+    },
+    {
+      "key": "userId",
+      "value": "1"
+    },
+    {
+      "key": "accountId",
+      "value": "1"
+    },
+    {
+      "key": "orderId",
+      "value": "1"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Create User",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "var jsonData = pm.response.json();",
+              "pm.globals.set(\"userId\", jsonData.id);",
+              "",
+              "pm.test(\"Status code is 201\", function () {",
+              "    pm.response.to.have.status(201);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"anya\",\n  \"password\": \"qwerty123\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/user/register",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "user",
+            "register"
+          ]
+        }
+      }
+    },
+    {
+      "name": "2. Check Account Creation",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "var jsonData = pm.response.json();",
+              "",
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Account created with zero balance\", function () {",
+              "    pm.expect(jsonData).to.be.a('number');",
+              "    pm.expect(jsonData).to.eql(0);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/account/{{userId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "account",
+            "{{userId}}"
+          ]
+        },
+        "auth": {
+          "type": "basic",
+          "basic": [
+            {
+              "key": "username",
+              "value": "anya"
+            },
+            {
+              "key": "password",
+              "value": "qwerty123"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "3. Deposit Money",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "var jsonData = pm.response.json();",
+              "",
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Deposit successful\", function () {",
+              "    pm.expect(jsonData.balance).to.eql(1000);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/account/deposit?userId={{userId}}&amount=1000",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "account",
+            "deposit"
+          ],
+          "query": [
+            {
+              "key": "userId",
+              "value": "{{userId}}"
+            },
+            {
+              "key": "amount",
+              "value": "1000"
+            }
+          ]
+        },
+        "auth": {
+          "type": "basic",
+          "basic": [
+            {
+              "key": "username",
+              "value": "anya"
+            },
+            {
+              "key": "password",
+              "value": "qwerty123"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "4. Create Order (Sufficient Funds)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "var jsonData = pm.response.json();",
+              "pm.globals.set(\"orderId\", jsonData.id);",
+              "",
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Order created successfully\", function () {",
+              "    pm.expect(jsonData.id).to.be.a('number');",
+              "    pm.expect(jsonData.amount).to.eql(500);",
+              "    pm.expect(jsonData.status).to.eql(\"COMPLETED\");",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"userId\": {{userId}},\n    \"amount\": 500,\n    \"status\": \"NEW\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/order",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "order"
+          ]
+        },
+        "auth": {
+          "type": "basic",
+          "basic": [
+            {
+              "key": "username",
+              "value": "anya"
+            },
+            {
+              "key": "password",
+              "value": "qwerty123"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "5. Check Account Balance After Order",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "var jsonData = pm.response.json();",
+              "",
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Balance updated correctly\", function () {",
+              "    pm.expect(jsonData).to.eql(500);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/account/{{userId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "account",
+            "{{userId}}"
+          ]
+        },
+        "auth": {
+          "type": "basic",
+          "basic": [
+            {
+              "key": "username",
+              "value": "anya"
+            },
+            {
+              "key": "password",
+              "value": "qwerty123"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "6. Check Notifications",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "var jsonData = pm.response.json();",
+              "",
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/notification/{{userId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "notification",
+            "{{userId}}"
+          ]
+        },
+        "auth": {
+          "type": "basic",
+          "basic": [
+            {
+              "key": "username",
+              "value": "anya"
+            },
+            {
+              "key": "password",
+              "value": "qwerty123"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "7. Create Order (Insufficient Funds)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "var jsonData = pm.response.json();",
+              "",
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Order creation failed due to insufficient funds\", function () {",
+              "    pm.expect(jsonData.status).to.eql(\"FAILED\");",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"userId\": {{userId}},\n    \"amount\": 1000,\n    \"status\": \"NEW\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/order",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "order"
+          ]
+        },
+        "auth": {
+          "type": "basic",
+          "basic": [
+            {
+              "key": "username",
+              "value": "anya"
+            },
+            {
+              "key": "password",
+              "value": "qwerty123"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "8. Check Account Balance After Failed Order",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "var jsonData = pm.response.json();",
+              "",
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Balance unchanged after failed order\", function () {",
+              "    pm.expect(jsonData).to.eql(500);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/account/{{userId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "account",
+            "{{userId}}"
+          ]
+        },
+        "auth": {
+          "type": "basic",
+          "basic": [
+            {
+              "key": "username",
+              "value": "anya"
+            },
+            {
+              "key": "password",
+              "value": "qwerty123"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "9. Check Notifications After Failed Order",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "var jsonData = pm.response.json();",
+              "",
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/notification/{{userId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "notification",
+            "{{userId}}"
+          ]
+        },
+        "auth": {
+          "type": "basic",
+          "basic": [
+            {
+              "key": "username",
+              "value": "anya"
+            },
+            {
+              "key": "password",
+              "value": "qwerty123"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

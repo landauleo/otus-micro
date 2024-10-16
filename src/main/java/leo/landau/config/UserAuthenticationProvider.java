@@ -1,4 +1,4 @@
-package leo.landau;
+package leo.landau.config;
 
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.http.HttpRequest;
@@ -10,6 +10,8 @@ import io.micronaut.security.authentication.AuthenticationResponse;
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
 import jakarta.inject.Singleton;
+import leo.landau.model.User;
+import leo.landau.service.UserService;
 import org.reactivestreams.Publisher;
 
 @Singleton

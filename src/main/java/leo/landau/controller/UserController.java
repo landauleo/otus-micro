@@ -1,4 +1,4 @@
-package leo.landau;
+package leo.landau.controller;
 
 import javax.validation.constraints.NotNull;
 
@@ -16,6 +16,8 @@ import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.rules.SecurityRule;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.inject.Inject;
+import leo.landau.model.UserDto;
+import leo.landau.service.UserService;
 
 @Tag(name = "user")
 @Controller("/user")
