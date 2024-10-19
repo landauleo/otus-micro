@@ -16,17 +16,23 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Long userId;
+    private Long itemId;
+    private Long courierId;
+    private int quantity;
     private BigDecimal amount;
     private OrderStatus status;
 
-    public Order(Long id, Long userId, BigDecimal amount, OrderStatus status) {
-        this.id = id;
-        this.userId = userId;
-        this.amount = amount;
-        this.status = status;
+    public Order() {
     }
 
-    public Order() {
+    public Order(Long id, Long userId, Long itemId, Long courierId, int quantity, BigDecimal amount, OrderStatus status) {
+        this.id = id;
+        this.userId = userId;
+        this.itemId = itemId;
+        this.courierId = courierId;
+        this.quantity = quantity;
+        this.amount = amount;
+        this.status = status;
     }
 
     public Long getId() {
@@ -45,6 +51,30 @@ public class Order {
         this.userId = userId;
     }
 
+    public Long getItemId() {
+        return itemId;
+    }
+
+    public void setItemId(Long itemId) {
+        this.itemId = itemId;
+    }
+
+    public Long getCourierId() {
+        return courierId;
+    }
+
+    public void setCourierId(Long courierId) {
+        this.courierId = courierId;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
     public BigDecimal getAmount() {
         return amount;
     }
@@ -59,19 +89,6 @@ public class Order {
 
     public void setStatus(OrderStatus status) {
         this.status = status;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Order order = (Order) o;
-        return Objects.equals(id, order.id) && Objects.equals(userId, order.userId) && Objects.equals(amount, order.amount) && status == order.status;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, userId, amount, status);
     }
 
 }

@@ -41,6 +41,14 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
+    public boolean refund(Long userId, BigDecimal amount) {
+        Account account = accountRepository.findByUserId(userId);
+            account.setBalance(account.getBalance().add(amount));
+            accountRepository.save(account);
+            return true;
+    }
+
+    @Override
     public BigDecimal getBalance(Long userId) {
         return accountRepository.findByUserId(userId).getBalance();
     }

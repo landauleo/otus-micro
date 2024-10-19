@@ -75,6 +75,7 @@ Scheme:
 ![alt text](static/order.svg "Order scheme")
 
 Newman results:
+[postman_collection_order.json](https://github.com/landauleo/otus-micro/blob/a6a2e6b3448bd5f7ede605990499a0d501d1ef1a/src/main/resources/postman_collection_order.json)
 ![alt text](static/hw7.png "Order tests")
 
 

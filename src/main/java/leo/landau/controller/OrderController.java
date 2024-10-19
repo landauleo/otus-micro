@@ -13,7 +13,7 @@ import jakarta.inject.Inject;
 import leo.landau.model.Order;
 import leo.landau.service.OrderService;
 
-@Tag(name = "user")
+@Tag(name = "order")
 @Controller("/order")
 @Secured(SecurityRule.IS_AUTHENTICATED)
 public class OrderController {
@@ -23,7 +23,8 @@ public class OrderController {
 
     @Post
     public HttpResponse<Order> createOrder(@RequestBody Order order) {
-        return HttpResponse.ok(orderService.createOrder(order));
+        Order createdOrder = orderService.createOrder(order);
+        return createdOrder == null ? HttpResponse.badRequest() : HttpResponse.ok(createdOrder);
     }
 
     @Get("/{id}")

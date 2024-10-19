@@ -15,7 +15,7 @@ import jakarta.inject.Inject;
 import leo.landau.model.Notification;
 import leo.landau.service.NotificationService;
 
-@Tag(name = "user")
+@Tag(name = "notification")
 @Controller("/notification")
 @Secured(SecurityRule.IS_AUTHENTICATED)
 public class NotificationController {

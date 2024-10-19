@@ -12,6 +12,8 @@ public interface AccountService {
 
     boolean withdraw(Long userId, BigDecimal amount);
 
+    boolean refund(Long userId, BigDecimal amount);
+
     BigDecimal getBalance(Long userId);
 
 }

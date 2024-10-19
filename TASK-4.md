@@ -62,5 +62,6 @@ kubectl delete secret --all
 kubectl delete configmap --all
 ```
 
-Newman
+Newman results:
+[postman_collection.json](https://github.com/landauleo/otus-micro/blob/a6a2e6b3448bd5f7ede605990499a0d501d1ef1a/src/main/resources/postman_collection.json)
 ![alt text](static/hw4.png "Title")
