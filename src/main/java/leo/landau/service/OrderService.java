@@ -1,9 +1,11 @@
 package leo.landau.service;
 
+import java.util.Optional;
 import javax.transaction.Transactional;
 
 import jakarta.inject.Singleton;
 import leo.landau.model.Order;
+import leo.landau.model.OrderDto;
 import leo.landau.model.OrderStatus;
 import leo.landau.repository.OrderRepository;
 
@@ -27,16 +29,23 @@ public class OrderService {
         this.deliveryService = deliveryService;
     }
 
-    public Order createOrder(Order order) {
-        boolean isSuccess = executeOrderSaga(order);
+    public Order createOrder(OrderDto orderDto) {
+        if (orderDto.getId() != null) {
+            Optional<Order> existingOrder = orderRepository.findById(orderDto.getId());
+            if (existingOrder.isPresent()) {
+                return existingOrder.get();
+            }
+        }
+
+        boolean isSuccess = executeOrderSaga(orderDto);
         if (isSuccess) {
-            // Сохранение заказа в базу данных
-            order.setStatus(OrderStatus.COMPLETED);
-            notificationService.sendNotification(order.getUserId(), "Заказ успешно оформлен");
-            return order;
+            orderDto.setStatus(OrderStatus.COMPLETED);
+            Order savedOrder = orderRepository.save(OrderDto.toEntity(orderDto));
+            notificationService.sendNotification(orderDto.getUserId(), "Заказ успешно оформлен");
+            return savedOrder;
         } else {
-            order.setStatus(OrderStatus.FAILED);
-            notificationService.sendNotification(order.getUserId(), "Не удалось оформить заказ");
+            orderDto.setStatus(OrderStatus.FAILED);
+            notificationService.sendNotification(orderDto.getUserId(), "Не удалось оформить заказ");
             return null;
         }
     }
@@ -45,7 +54,7 @@ public class OrderService {
         return orderRepository.findById(id).orElseThrow(() -> new RuntimeException("Order not found"));
     }
 
-    private boolean executeOrderSaga(Order order) {
+    private boolean executeOrderSaga(OrderDto order) {
         boolean paymentSuccess = false;
         boolean inventorySuccess = false;
         boolean deliverySuccess = false;

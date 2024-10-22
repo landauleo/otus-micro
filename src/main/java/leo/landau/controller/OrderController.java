@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.inject.Inject;
 import leo.landau.model.Order;
+import leo.landau.model.OrderDto;
 import leo.landau.service.OrderService;
 
 @Tag(name = "order")
@@ -22,7 +23,7 @@ public class OrderController {
     private OrderService orderService;
 
     @Post
-    public HttpResponse<Order> createOrder(@RequestBody Order order) {
+    public HttpResponse<Order> createOrder(@RequestBody OrderDto order) {
         Order createdOrder = orderService.createOrder(order);
         return createdOrder == null ? HttpResponse.badRequest() : HttpResponse.ok(createdOrder);
     }

@@ -1,0 +1,316 @@
+{
+	"info": {
+		"name": "Order Tests Idempotency",
+		"description": "Тесты на регистрацию пользователя, создание заказа с применением паттерна идемпотентности Conditional Update",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Register user anya",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/user/register",
+					"host": ["{{baseUrl}}"],
+					"path": ["user", "register"]
+				},
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"username\": \"anya\",\n  \"password\": \"qwerty123\"\n}"
+				}
+			},
+			"response": []
+		},
+       {
+          "name": "Deposit Money",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "",
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Deposit successful\", function () {",
+                  "    pm.expect(jsonData.balance).to.eql(1000);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/account/deposit?userId=1&amount=1000",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "account",
+                "deposit"
+              ],
+              "query": [
+                {
+                  "key": "userId",
+                  "value": "1"
+                },
+                {
+                  "key": "amount",
+                  "value": "1000"
+                }
+              ]
+            },
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "anya"
+                },
+                {
+                  "key": "password",
+                  "value": "qwerty123"
+                }
+              ]
+            }
+          }
+        },
+        {
+            "name": "Create Order - First Attempt",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(\"Status code is 200\", function () {",
+                            "    pm.response.to.have.status(200);",
+                            "});",
+                            "",
+                            "const response = pm.response.json();",
+                            "",
+                            "pm.test(\"Response contains order details\", function () {",
+                            "    pm.expect(response).to.have.property('id');",
+                            "    pm.expect(response).to.have.property('userId');",
+                            "    pm.expect(response).to.have.property('itemId');",
+                            "    pm.expect(response).to.have.property('quantity');",
+                            "    pm.expect(response).to.have.property('amount');",
+                            "    pm.expect(response).to.have.property('courierId');",
+                            "});",
+                            "",
+                            "// Store response for later comparison",
+                            "pm.collectionVariables.set('firstOrderId', response.id);",
+                            "pm.collectionVariables.set('firstOrderResponse', JSON.stringify(response));"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ],
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"userId\": 1,\n  \"itemId\": 1,\n  \"quantity\": 1,\n  \"amount\": 100,\n  \"courierId\": 1\n}"
+                },
+                "url": {
+                    "raw": "{{baseUrl}}/order",
+                    "host": ["{{baseUrl}}"],
+                    "path": ["order"]
+                },
+                "auth": {
+                    "type": "basic",
+                    "basic": [
+                        {
+                            "key": "username",
+                            "value": "anya"
+                        },
+                        {
+                            "key": "password",
+                            "value": "qwerty123"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "name": "Get Order - First Check",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(\"Status code is 200\", function () {",
+                            "    pm.response.to.have.status(200);",
+                            "});",
+                            "",
+                            "const firstOrderResponse = JSON.parse(pm.collectionVariables.get('firstOrderResponse'));",
+                            "const getCurrentResponse = pm.response.json();",
+                            "",
+                            "pm.test(\"GET response matches initial POST response\", function () {",
+                            "    pm.expect(getCurrentResponse).to.deep.equal(firstOrderResponse);",
+                            "});"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ],
+            "request": {
+                "method": "GET",
+                "url": {
+                    "raw": "{{baseUrl}}/order/{{firstOrderId}}",
+                    "host": ["{{baseUrl}}"],
+                    "path": ["order", "{{firstOrderId}}"]
+                },
+                "auth": {
+                    "type": "basic",
+                    "basic": [
+                        {
+                            "key": "username",
+                            "value": "anya"
+                        },
+                        {
+                            "key": "password",
+                            "value": "qwerty123"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "name": "Create Order - Second Attempt (Idempotency Check)",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(\"Status code is 200\", function () {",
+                            "    pm.response.to.have.status(200);",
+                            "});",
+                            "",
+                            "const firstOrderResponse = JSON.parse(pm.collectionVariables.get('firstOrderResponse'));",
+                            "const secondPostResponse = pm.response.json();",
+                            "",
+                            "pm.test(\"Second POST response matches first POST response\", function () {",
+                            "    pm.expect(secondPostResponse).to.deep.equal(firstOrderResponse);",
+                            "});"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ],
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"id\": 1,\n  \"userId\": 1,\n  \"itemId\": 1,\n  \"quantity\": 1,\n  \"amount\": 100,\n  \"courierId\": 1\n}"
+                },
+                "url": {
+                    "raw": "{{baseUrl}}/order",
+                    "host": ["{{baseUrl}}"],
+                    "path": ["order"]
+                },
+                "auth": {
+                    "type": "basic",
+                    "basic": [
+                        {
+                            "key": "username",
+                            "value": "anya"
+                        },
+                        {
+                            "key": "password",
+                            "value": "qwerty123"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "name": "Get Order - Final Check",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(\"Status code is 200\", function () {",
+                            "    pm.response.to.have.status(200);",
+                            "});",
+                            "",
+                            "const firstOrderResponse = JSON.parse(pm.collectionVariables.get('firstOrderResponse'));",
+                            "const finalGetResponse = pm.response.json();",
+                            "",
+                            "pm.test(\"Final GET response matches initial order state\", function () {",
+                            "    pm.expect(finalGetResponse).to.deep.equal(firstOrderResponse);",
+                            "});"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ],
+            "request": {
+                "method": "GET",
+                "url": {
+                    "raw": "{{baseUrl}}/order/{{firstOrderId}}",
+                    "host": ["{{baseUrl}}"],
+                    "path": ["order", "{{firstOrderId}}"]
+                },
+                "auth": {
+                    "type": "basic",
+                    "basic": [
+                        {
+                            "key": "username",
+                            "value": "anya"
+                        },
+                        {
+                            "key": "password",
+                            "value": "qwerty123"
+                        }
+                    ]
+                }
+            }
+        }
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": []
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": []
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://arch.homework"
+		}
+	]
+}
