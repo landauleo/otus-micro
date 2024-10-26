@@ -15,7 +15,7 @@ import jakarta.inject.Inject;
 import leo.landau.model.Account;
 import leo.landau.service.AccountServiceImpl;
 
-@Tag(name = "user")
+@Tag(name = "account")
 @Controller("/account")
 @Secured(SecurityRule.IS_AUTHENTICATED)
 public class AccountController {

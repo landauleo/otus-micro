@@ -1,19 +1,12 @@
 package leo.landau.model;
 
 import java.math.BigDecimal;
-import java.util.Objects;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
 
-@Entity
-@Table(schema = "micro", name = "order")
-public class Order {
+import io.swagger.v3.oas.annotations.media.Schema;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+@Schema(description = "User object")
+public class OrderDto {
+
     private Long id;
     private Long userId;
     private Long itemId;
@@ -22,10 +15,10 @@ public class Order {
     private BigDecimal amount;
     private OrderStatus status;
 
-    public Order() {
+    public OrderDto() {
     }
 
-    public Order(Long id, Long userId, Long itemId, Long courierId, int quantity, BigDecimal amount, OrderStatus status) {
+    public OrderDto(Long id, Long userId, Long itemId, Long courierId, int quantity, BigDecimal amount, OrderStatus status) {
         this.id = id;
         this.userId = userId;
         this.itemId = itemId;
@@ -33,6 +26,18 @@ public class Order {
         this.quantity = quantity;
         this.amount = amount;
         this.status = status;
+    }
+
+    public static Order toEntity(OrderDto orderDto) {
+        Order order = new Order();
+        order.setId(orderDto.getId());
+        order.setUserId(orderDto.getUserId());
+        order.setItemId(orderDto.getItemId());
+        order.setCourierId(orderDto.getCourierId());
+        order.setQuantity(orderDto.getQuantity());
+        order.setAmount(orderDto.getAmount());
+        order.setStatus(orderDto.getStatus());
+        return order;
     }
 
     public Long getId() {
@@ -92,3 +97,5 @@ public class Order {
     }
 
 }
+
+

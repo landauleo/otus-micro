@@ -1,0 +1,257 @@
+{
+	"info": {
+		"name": "Order Tests",
+		"_postman_id": "your-postman-id",
+		"description": "Тесты на регистрацию пользователя, создание заказа с применением патерна Saga",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Register user anya",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/user/register",
+					"host": ["{{baseUrl}}"],
+					"path": ["user", "register"]
+				},
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"username\": \"anya\",\n  \"password\": \"qwerty123\"\n}"
+				}
+			},
+			"response": []
+		},
+       {
+          "name": "Deposit Money",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "",
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Deposit successful\", function () {",
+                  "    pm.expect(jsonData.balance).to.eql(1000);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/account/deposit?userId=1&amount=1000",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "account",
+                "deposit"
+              ],
+              "query": [
+                {
+                  "key": "userId",
+                  "value": "1"
+                },
+                {
+                  "key": "amount",
+                  "value": "1000"
+                }
+              ]
+            },
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "anya"
+                },
+                {
+                  "key": "password",
+                  "value": "qwerty123"
+                }
+              ]
+            }
+          }
+        },
+		{
+			"name": "Create Order - Success",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "anya"
+						},
+						{
+							"key": "password",
+							"value": "qwerty123"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"id\": 1,\n  \"userId\": 1,\n  \"itemId\": 1,\n  \"quantity\": 1,\n  \"amount\": 100,\n  \"courierId\": 1\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/order",
+					"host": ["{{baseUrl}}"],
+					"path": ["order"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Order - Insufficient Funds",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "anya"
+						},
+						{
+							"key": "password",
+							"value": "qwerty123"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"id\": 1,\n  \"userId\": 1,\n  \"itemId\": 1,\n  \"quantity\": 1,\n  \"amount\": 1000000,\n  \"courierId\": 1\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/order",
+					"host": ["{{baseUrl}}"],
+					"path": ["order"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Order - Out of Stock",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "anya"
+						},
+						{
+							"key": "password",
+							"value": "qwerty123"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"id\": 1,\n  \"userId\": 1,\n  \"itemId\": 1,\n  \"quantity\": 1000,\n  \"amount\": 100,\n  \"courierId\": 1\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/order",
+					"host": ["{{baseUrl}}"],
+					"path": ["order"]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": []
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": []
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://arch.homework"
+		}
+	]
+}
